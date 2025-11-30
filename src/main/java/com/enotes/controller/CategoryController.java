@@ -1,5 +1,6 @@
 package com.enotes.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enotes.dto.CategoryDTO;
+import com.enotes.dto.CategoryResponse;
 import com.enotes.model.Category;
 import com.enotes.service.CategoryService;
 
@@ -23,9 +26,9 @@ public class CategoryController {
 	private CategoryService categoryServiceImpl;
 	
 	@PostMapping("/saveCategory")
-	public ResponseEntity<Object> saveCategoryData(@RequestBody Category category) {
+	public ResponseEntity<Object> saveCategoryData(@RequestBody CategoryDTO categoryDTO) {
 		
-		Boolean isCategorySaved = categoryServiceImpl.saveCategoryDetails(category);
+		Boolean isCategorySaved = categoryServiceImpl.saveCategoryDetails(categoryDTO);
 		
 		if(isCategorySaved) {
 			return new ResponseEntity<Object>("Category is saved in Database", HttpStatus.CREATED);
@@ -39,14 +42,28 @@ public class CategoryController {
 	@GetMapping("/viewAllCategory")
 	public ResponseEntity<Object> viewAllCategoryData() {
 		
-		List<Category> allCategoryList = categoryServiceImpl.getAllCategoryDetails();
+		List<CategoryDTO> allCategoryDTOList = categoryServiceImpl.getAllCategoryDetails();
 		
-		if(CollectionUtils.isEmpty(allCategoryList)) {
+		if(CollectionUtils.isEmpty(allCategoryDTOList)) {
 			
 			return new ResponseEntity<>("Could not get Category List", HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(allCategoryList, HttpStatus.OK);
+		return new ResponseEntity<>(allCategoryDTOList, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/allActiveCategory")
+	public ResponseEntity<Object> viewAllActiveCategoryData() {
+		
+		List<CategoryResponse> activeCategoryRespList = categoryServiceImpl.getAllActiveCategoryDetails();
+		
+		if(CollectionUtils.isEmpty(activeCategoryRespList)) {
+			
+			return new ResponseEntity<Object>("Could not get active Category List", HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<Object>(activeCategoryRespList, HttpStatus.OK);
 	}
 	
 	

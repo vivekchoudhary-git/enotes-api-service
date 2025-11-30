@@ -1,13 +1,17 @@
 package com.enotes.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.List;import java.util.stream.Collector;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import com.enotes.dto.CategoryDTO;
+import com.enotes.dto.CategoryResponse;
 import com.enotes.model.Category;
 import com.enotes.repository.CategoryRepo;
 import com.enotes.service.CategoryService;
@@ -16,15 +20,20 @@ import com.enotes.service.CategoryService;
 public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Autowired
 	private CategoryRepo categoryRepo;
 	
 	@Override
-	public Boolean saveCategoryDetails(Category category) {
+	public Boolean saveCategoryDetails(CategoryDTO categoryDTO) {
+		
+		Category category = modelMapper.map(categoryDTO, Category.class);
 		
 		category.setIsActive(true);
 		category.setIsDeleted(false);
 		category.setCreatedOn(new Date());
-		category.setCreatedBy(2);                   // currently we are hard coding createdBy manually only for testing.
+		category.setCreatedBy(3);                   // currently we are hard coding createdBy manually only for testing.
 		
 		Category savedCategory = categoryRepo.save(category);
 		
@@ -36,11 +45,38 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<Category> getAllCategoryDetails() {
+	public List<CategoryDTO> getAllCategoryDetails() {
 		
 		List<Category> allCategoryList = categoryRepo.findAll();
 		
-		return allCategoryList;
+		// Old traditional way of doing this (S)
+		
+//		ArrayList<CategoryDTO> allCategoryDTOList = new ArrayList<>();
+//		
+//		for(Category cat: allCategoryList) {
+//			
+//			CategoryDTO catDTO = modelMapper.map(cat, CategoryDTO.class);
+//			
+//			allCategoryDTOList.add(catDTO);
+//		}
+			
+		// Old traditional way of doing this (E)
+		
+		// New Modern way of doing this (S)
+		List<CategoryDTO> allCategoryDTOList = allCategoryList.stream().map(cat -> modelMapper.map(cat, CategoryDTO.class)).toList();
+		// New Modern way of doing this (E)
+		
+		return allCategoryDTOList;
+	}
+
+	@Override
+	public List<CategoryResponse> getAllActiveCategoryDetails() {
+		
+		List<Category> activeCategoryList = categoryRepo.findByIsActiveTrueAndIsDeletedFalse();
+		
+		List<CategoryResponse> catRespList = activeCategoryList.stream().map(cat -> modelMapper.map(cat, CategoryResponse.class)).toList();
+		
+		return catRespList;
 	}
 
 }
