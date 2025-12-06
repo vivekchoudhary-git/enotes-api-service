@@ -116,6 +116,35 @@ public class CategoryServiceImpl implements CategoryService {
 		
 	}
 
+	@Override
+	public Boolean updateCategoryDetails(CategoryDTO categoryDTO) {
+		
+		Optional<Category> existingOptionalCategory = categoryRepo.findById(categoryDTO.getId());
+		
+		if(existingOptionalCategory.isPresent()) {
+			Category existingCategory = existingOptionalCategory.get();
+			categoryDTO.setCreatedBy(existingCategory.getCreatedBy());
+			categoryDTO.setCreatedOn(existingCategory.getCreatedOn());
+			categoryDTO.setUpdatedBy(1);                                      // hardcoded updatedBy for testing only
+			categoryDTO.setUpdatedOn(new Date());
+			categoryDTO.setIsActive(existingCategory.getIsActive());
+			categoryDTO.setIsDeleted(existingCategory.getIsDeleted());
+			
+			Category category = modelMapper.map(categoryDTO, Category.class);
+			Category updatedCategory = categoryRepo.save(category);
+			
+			if(!ObjectUtils.isEmpty(updatedCategory)) {
+				return true;
+			}
+			else
+				
+				return false;
+		}
+		
+		return null;
+		
+	}
+
 	
 	
 }

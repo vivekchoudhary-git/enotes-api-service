@@ -29,16 +29,30 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryServiceImpl;
 	
+	// save or update Category
 	@PostMapping("/saveCategory")
 	public ResponseEntity<Object> saveCategoryData(@RequestBody CategoryDTO categoryDTO) {
 		
-		Boolean isCategorySaved = categoryServiceImpl.saveCategoryDetails(categoryDTO);
-		
-		if(isCategorySaved) {
-			return new ResponseEntity<Object>("Category is saved in Database", HttpStatus.CREATED);
+		if(categoryDTO.getId() == null) {
+			Boolean isCategorySaved = categoryServiceImpl.saveCategoryDetails(categoryDTO);
+			
+			if(isCategorySaved) {
+				return new ResponseEntity<Object>("Category is Saved in Database", HttpStatus.CREATED);
+			}else {
+			return new ResponseEntity<Object>("Category is not Saved in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 		}else {
-		return new ResponseEntity<Object>("Category is not saved in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+			Boolean isCategoryUpdated = categoryServiceImpl.updateCategoryDetails(categoryDTO);
+			
+			if(isCategoryUpdated) {
+				return new ResponseEntity<Object>("Category is Updated in Database", HttpStatus.CREATED);
+			}else {
+			return new ResponseEntity<Object>("Category is not Updated in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 		}
+		
 		
 	}
 	
