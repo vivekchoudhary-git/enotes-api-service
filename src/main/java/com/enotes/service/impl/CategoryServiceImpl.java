@@ -2,7 +2,9 @@ package com.enotes.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;import java.util.stream.Collector;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,4 +81,41 @@ public class CategoryServiceImpl implements CategoryService {
 		return catRespList;
 	}
 
+	@Override
+	public CategoryDTO getCategoryDetails(Integer id) {
+		
+		Category category = categoryRepo.findByIdAndIsDeletedFalse(id);
+		
+	    if(!ObjectUtils.isEmpty(category)) {
+		CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
+		return categoryDTO;
+	    }else 
+	    	
+		return null;
+	}
+
+	@Override
+	public Boolean deleteCategoryDetails(Integer id) {
+		
+		Optional<Category> optionalCategory = categoryRepo.findById(id);
+		
+		if(optionalCategory.isPresent()) {
+			Category category = optionalCategory.get();
+			category.setIsDeleted(true);
+			Category savedCategory = categoryRepo.save(category);
+			
+			if(!ObjectUtils.isEmpty(savedCategory)) {
+				return true;
+			}
+			
+			return false;
+		}else {
+			
+			return false;
+		}
+		
+	}
+
+	
+	
 }

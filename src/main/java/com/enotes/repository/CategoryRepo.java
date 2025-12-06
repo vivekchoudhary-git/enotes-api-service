@@ -10,4 +10,6 @@ public interface CategoryRepo extends JpaRepository<Category, Integer> {
 
 	public List<Category> findByIsActiveTrueAndIsDeletedFalse();
 	
+	public Category findByIdAndIsDeletedFalse(Integer cid);
+	
 }
