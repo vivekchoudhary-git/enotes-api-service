@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.enotes.dto.CategoryDTO;
 import com.enotes.dto.CategoryResponse;
+import com.enotes.exception.ResourceNotFoundException;
 import com.enotes.model.Category;
 import com.enotes.service.CategoryService;
 
@@ -86,7 +87,7 @@ public class CategoryController {
 	
 	
 	@GetMapping("/viewCategory/{id}")
-	public ResponseEntity<Object> viewCategoryData(@PathVariable Integer id) {
+	public ResponseEntity<Object> viewCategoryData(@PathVariable Integer id) throws ResourceNotFoundException {
 		
 		CategoryDTO categoryDTO = categoryServiceImpl.getCategoryDetails(id);
 		
