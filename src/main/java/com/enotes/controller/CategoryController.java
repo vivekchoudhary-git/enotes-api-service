@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.enotes.dto.CategoryDTO;
 import com.enotes.dto.CategoryResponse;
 import com.enotes.exception.ResourceNotFoundException;
+import com.enotes.exception.ValidationException;
 import com.enotes.model.Category;
 import com.enotes.service.CategoryService;
+import com.enotes.validation.Validation;
 
 
 @RestController
@@ -28,11 +30,16 @@ import com.enotes.service.CategoryService;
 public class CategoryController {
 
 	@Autowired
+	private Validation validation;
+	
+	@Autowired
 	private CategoryService categoryServiceImpl;
 	
 	// save or update Category
 	@PostMapping("/saveCategory")
-	public ResponseEntity<Object> saveCategoryData(@RequestBody CategoryDTO categoryDTO) {
+	public ResponseEntity<Object> saveCategoryData(@RequestBody CategoryDTO categoryDTO) throws ValidationException {
+		
+		validation.categoryValidation(categoryDTO);
 		
 		if(categoryDTO.getId() == null) {
 			Boolean isCategorySaved = categoryServiceImpl.saveCategoryDetails(categoryDTO);
