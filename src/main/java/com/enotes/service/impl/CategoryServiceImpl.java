@@ -35,8 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		category.setIsActive(true);
 		category.setIsDeleted(false);
-		category.setCreatedOn(new Date());
-		category.setCreatedBy(3);                   // currently we are hard coding createdBy manually only for testing.
+//		category.setCreatedOn(new Date());           // generates automatically using auditing
+//		category.setCreatedBy(3);                   // currently we are hard coding createdBy manually only for testing.      // generates automatically using auditing
 		
 		Category savedCategory = categoryRepo.save(category);
 		
@@ -126,8 +126,8 @@ public class CategoryServiceImpl implements CategoryService {
 			Category existingCategory = existingOptionalCategory.get();
 			categoryDTO.setCreatedBy(existingCategory.getCreatedBy());
 			categoryDTO.setCreatedOn(existingCategory.getCreatedOn());
-			categoryDTO.setUpdatedBy(1);                                      // hardcoded updatedBy for testing only
-			categoryDTO.setUpdatedOn(new Date());
+//			categoryDTO.setUpdatedBy(1);                                         // hardcoded updatedBy for testing only        // generates automatically using auditing
+//			categoryDTO.setUpdatedOn(new Date());                                           // generates automatically using auditing
 			categoryDTO.setIsActive(existingCategory.getIsActive());
 			categoryDTO.setIsDeleted(existingCategory.getIsDeleted());
 			
