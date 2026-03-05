@@ -22,6 +22,7 @@ import com.enotes.exception.ResourceNotFoundException;
 import com.enotes.exception.ValidationException;
 import com.enotes.model.Category;
 import com.enotes.service.CategoryService;
+import com.enotes.util.CommonUtil;
 import com.enotes.validation.Validation;
 
 
@@ -45,18 +46,22 @@ public class CategoryController {
 			Boolean isCategorySaved = categoryServiceImpl.saveCategoryDetails(categoryDTO);
 			
 			if(isCategorySaved) {
-				return new ResponseEntity<Object>("Category is Saved in Database", HttpStatus.CREATED);
+//				return new ResponseEntity<Object>("Category is Saved in Database", HttpStatus.CREATED);
+				return CommonUtil.createBuildResponseMessage("Category is Saved in Database", HttpStatus.CREATED);
 			}else {
-			return new ResponseEntity<Object>("Category is not Saved in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+//			    return new ResponseEntity<Object>("Category is not Saved in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+				return CommonUtil.createErrorResponseMessage("Category is not Saved in Database", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
 		}else {
 			Boolean isCategoryUpdated = categoryServiceImpl.updateCategoryDetails(categoryDTO);
 			
 			if(isCategoryUpdated) {
-				return new ResponseEntity<Object>("Category is Updated in Database", HttpStatus.CREATED);
+//				return new ResponseEntity<Object>("Category is Updated in Database", HttpStatus.CREATED);
+				return CommonUtil.createBuildResponseMessage("Category is Updated in Database", HttpStatus.CREATED);
 			}else {
-			return new ResponseEntity<Object>("Category is not Updated in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+//			return new ResponseEntity<Object>("Category is not Updated in Database", HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("Category is not Updated in Database", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
 		}
@@ -72,10 +77,12 @@ public class CategoryController {
 		
 		if(CollectionUtils.isEmpty(allCategoryDTOList)) {
 			
-			return new ResponseEntity<>("Could not get Category List", HttpStatus.NOT_FOUND);
+//			return new ResponseEntity<>("Could not get Category List", HttpStatus.NOT_FOUND);
+			return CommonUtil.createErrorResponseMessage("Could not get Category List", HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(allCategoryDTOList, HttpStatus.OK);
+//		return new ResponseEntity<>(allCategoryDTOList, HttpStatus.OK);
+		return CommonUtil.createBuildResponse(allCategoryDTOList, HttpStatus.OK);
 	}
 	
 	
@@ -86,10 +93,12 @@ public class CategoryController {
 		
 		if(CollectionUtils.isEmpty(activeCategoryRespList)) {
 			
-			return new ResponseEntity<Object>("Could not get active Category List", HttpStatus.NOT_FOUND);
+//			return new ResponseEntity<Object>("Could not get active Category List", HttpStatus.NOT_FOUND);
+			return CommonUtil.createErrorResponseMessage("Could not get active Category List", HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<Object>(activeCategoryRespList, HttpStatus.OK);
+//		return new ResponseEntity<Object>(activeCategoryRespList, HttpStatus.OK);
+		return CommonUtil.createBuildResponse(activeCategoryRespList, HttpStatus.OK);
 	}
 	
 	
@@ -100,10 +109,12 @@ public class CategoryController {
 		
 		if(ObjectUtils.isEmpty(categoryDTO)){
 			
-			return new ResponseEntity<Object>("Could not get Category Data", HttpStatus.INTERNAL_SERVER_ERROR);
+//			return new ResponseEntity<Object>("Could not get Category Data", HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("Could not get Category Data", HttpStatus.INTERNAL_SERVER_ERROR);
 		}else {
 			
-			return new ResponseEntity<Object>(categoryDTO, HttpStatus.OK);
+//			return new ResponseEntity<Object>(categoryDTO, HttpStatus.OK);
+			return CommonUtil.createBuildResponse(categoryDTO, HttpStatus.OK);
 		}
 		
 	}
@@ -115,9 +126,11 @@ public class CategoryController {
 		Boolean catStatus = categoryServiceImpl.deleteCategoryDetails(id);
 		
 		if(catStatus) {
-			return new ResponseEntity<>("Category is Deleted Successfully", HttpStatus.OK);
+//			return new ResponseEntity<>("Category is Deleted Successfully", HttpStatus.OK);
+			return CommonUtil.createBuildResponseMessage("Category is Deleted Successfully", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<>("Category is Not Deleted", HttpStatus.INTERNAL_SERVER_ERROR);
+//			return new ResponseEntity<>("Category is Not Deleted", HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("Category is Not Deleted", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
