@@ -41,4 +41,10 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(e.getError(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ExceptionHandler(ExistsDataException.class)
+	public ResponseEntity<Object> handleExistsDataException(ExistsDataException e){
+		
+		return new ResponseEntity<Object>(e.getMessage(), HttpStatus.CONFLICT);
+	}
+	
 }

@@ -14,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.enotes.dto.CategoryDTO;
 import com.enotes.dto.CategoryResponse;
+import com.enotes.exception.ExistsDataException;
 import com.enotes.exception.ResourceNotFoundException;
 import com.enotes.model.Category;
 import com.enotes.repository.CategoryRepo;
@@ -38,10 +39,14 @@ public class CategoryServiceImpl implements CategoryService {
 //		category.setCreatedOn(new Date());           // generates automatically using auditing
 //		category.setCreatedBy(3);                   // currently we are hard coding createdBy manually only for testing.      // generates automatically using auditing
 		
-		Category savedCategory = categoryRepo.save(category);
-		
-		if(ObjectUtils.isEmpty(savedCategory)) {
-			return false;
+		Boolean existsName = categoryRepo.existsByName(categoryDTO.getName().trim());
+		if(existsName) {
+			throw new ExistsDataException(categoryDTO.getName()+" category already exists");
+		}else {
+			Category savedCategory = categoryRepo.save(category);
+			if(ObjectUtils.isEmpty(savedCategory)) {
+				return false;
+			}
 		}
 		
 		return true;
@@ -132,17 +137,23 @@ public class CategoryServiceImpl implements CategoryService {
 			categoryDTO.setIsDeleted(existingCategory.getIsDeleted());
 			
 			Category category = modelMapper.map(categoryDTO, Category.class);
-			Category updatedCategory = categoryRepo.save(category);
 			
-			if(!ObjectUtils.isEmpty(updatedCategory)) {
-				return true;
-			}
-			else
+			Boolean existsName = categoryRepo.existsByName(categoryDTO.getName().trim());
+			if(existsName) {
+				throw new ExistsDataException(categoryDTO.getName()+" category already exists");	
+			}else {
+				Category updatedCategory = categoryRepo.save(category);
 				
-				return false;
+				if(!ObjectUtils.isEmpty(updatedCategory)) {
+					return true;
+				}
+				else
+					return false;
+			}
+			
 		}
 		
-		return null;
+		return false;
 		
 	}
 

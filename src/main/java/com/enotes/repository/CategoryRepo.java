@@ -12,4 +12,6 @@ public interface CategoryRepo extends JpaRepository<Category, Integer> {
 	
 	public Category findByIdAndIsDeletedFalse(Integer cid);
 	
+	public Boolean existsByName(String name);
+	
 }
